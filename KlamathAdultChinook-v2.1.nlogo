@@ -21,9 +21,11 @@ turtles-own
 
 to setup                                                                   ;; this is what happens when the setup button on the interface is pushed, it sets up the model
   ca                                                                       ;; clear all turtles, variables, patch changes
-  
- create-river 
- set-velocity
+  reset-ticks                                                              ;; reset-ticks restarts the tick counter at the start of an experiment run
+ 
+  create-river 
+  set-velocity
+ 
   crt 2                                                                    ;; creates 2 new fish ; Eventually I want this to create a number of new fish entering from the ocean as defined in a table
   
   [
@@ -34,7 +36,7 @@ to setup                                                                   ;; th
    ; pen-down                                                              ;; I am always tempted to put the pen down but it can make a mess
   ]
   
-  reset-ticks                                                              ;; reset-ticks restarts the tick counter at the start of an experiment run
+ 
   
 end                                                                        ;; each "to" command ends with "end"
 
@@ -72,16 +74,19 @@ to do-migration                                                            ;; ma
   move-to patch-here                                                       ;; move turtles to center of the patch in which they reside
   
   let p min-one-of neighbors [seg-velocity]                                ;; find the patch with the lowest seg-velocity in the Moore neighborhood
+  ifelse xcor < 31                                                         ;; if not at the upstream end of the model
+    [ifelse                                                                    ;; find the patch with the lowest seg-velocity in the Moore neighborhood
+      [pxcor] of min-one-of neighbors [seg-velocity] > [pxcor] of patch-here   ;; if the x-coordinate of the patch with the lowest segment velocity is greater than the x-coordinate of the 
+                                                                               ;; current patch
   
-  ifelse 
-    [pxcor] of min-one-of neighbors [seg-velocity] > [pxcor] of patch-here ;; if the x-coordinate of the patch with the lowest segment velocity is greater than the x-coordinate of the 
-                                                                           ;; current patch
-    [face p                                                                ;; face the patch with the lowest seg-velocity "p"
-      fd 1                                                                 ;; and move forward 1 unit
-      face patch-at-heading-and-distance 90 1]                             ;; then turn to face upstream 
-    [face patch-at-heading-and-distance 90 1                               ;; otherwise turn to face upstream  
-      fd 1]                                                                ;; and move forward 1 unit
-  
+      [face p                                                                  ;; face the patch with the lowest seg-velocity "p"
+        fd 1                                                                   ;; and move forward 1 unit
+        face patch-at-heading-and-distance 90 1]                               ;; then turn to face upstream 
+    
+      [face patch-at-heading-and-distance 90 1                                 ;; otherwise turn to face upstream  
+        fd 1]]                                                                 ;; and move forward 1 unit
+    [stop]                                                                  ;; if at the upstream end of the model, stop  
+    
 end
 
 ;------------------------------------------------------------------------------------------------------

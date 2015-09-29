@@ -25,7 +25,7 @@ to setup                                                                   ;; th
   create-river                                                             ;; execute the "to create-river" commands
   set-velocity                                                             ;; execute the "to set-velocity" commands
  
-  crt 2                                                                    ;; creates 2 new fish ; Eventually I want this to create a number of new fish entering from the ocean as defined in a table
+  crt 27                                                                   ;; creates 27 new fish ; Eventually I want this to create a number of new fish entering from the ocean as defined in a table
   
   [
     set size 1                                                             ;; set size of new fish to 1 (for display purposes only)
@@ -42,8 +42,8 @@ end                                                                        ;; ea
 
 to go                                                                      ;; initiate go sequence of events with the "go" button on the user interface
   
-  if all? turtles [xcor = 31]
-  
+  if all? turtles [xcor = 31]                                              ;; if all turtles reach the end of the model, stop (I had to use 31 because trying to get them to stop at 32 gave me problems
+                                                                           ;; in when they are asked to do-migration at x-coordinate 32, they are told to move off the edge and I got runtime errors)
     [ stop ] 
   
   ask turtles [ do-migration ]                                             ;; make the salmon move upstream to the upstream segment with the lowest velocity (if lower velocity exists upstream)
